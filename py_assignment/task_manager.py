@@ -30,17 +30,19 @@ class TaskManager:
 
 	def list_tasks(self, include_completed=False):
 		tasks = self.storage.get_all_tasks()
-		return tasks
+		if include_completed:
+			return tasks
+		return [task for task in tasks if not task.completed]
 
 	def generate_report(self):
 		tasks = self.storage.get_all_tasks()
 		total_tasks = len(tasks)
-		completed_tasks = len([task for task in tasks if task.completed])
+		completed_tasks = [task for task in tasks if task.completed]
 
 		report = {
-		    "total": total_tasks,
-		    "completed": completed_tasks,
-		    "pending": total_tasks - completed_tasks
+			"total": total_tasks,
+			"completed": len(completed_tasks),
+			"pending": total_tasks - len(completed_tasks)
 		}
 
 		return report
